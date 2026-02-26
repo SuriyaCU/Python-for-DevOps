@@ -2,8 +2,6 @@
 
 # Python Practice Exercises
 
-This document contains a collection of beginner-friendly Python exercises focused on basic programming concepts such as variables, data structures, functions, and validation.
-
 ---
 
 ## Disk Usage Calculation
