@@ -143,43 +143,39 @@ Output:
 * Hello, Charlie!
 
 ---
+## Exercise 4: Object-Oriented Deployment Manager
 
-### 2. Sum of Even Numbers
+### Objective
+Design a `Deployment` class that models a software deployment lifecycle. This class encapsulates state management (pending, deployed, rolled_back) and maintains a version history to support multi-step rollbacks.
 
-#### Description
 
-Create a function named `sum_even` that:
 
-* Accepts a list of integers.
-* Calculates and returns the sum of all even numbers.
+### Behavioral Requirements
 
-#### Example
+#### 1. Initialization (`__init__`)
+* **Status**: Set to `'pending'`.
+* **Version**: Initially set to `None`.
+* **Attributes**: Store `service_name` and `environment` as strings.
+* **History**: Initialize an internal structure to track previous versions.
 
-Input:
+#### 2. Deploy (`deploy`)
+* **State Change**: Update status to `'deployed'`.
+* **Version Update**: Set `new_version` as the current version.
+* **History**: The version that was active *before* this call must be stored to allow for future rollbacks.
 
-* `1, 2, 3, 4, 5, 6`
+#### 3. Rollback (`rollback`)
+* **Logic**: Revert the current version to the one immediately preceding it in history.
+* **Validation**: If no historical version exists, the method must return `False`.
+* **Success**: 
+    * Update status to `'rolled_back'`.
+    * Update the current version to the reverted version.
+    * Return `True`.
 
-Output:
-
-* `12`
-
----
-
-### 3. Fibonacci Sequence Generator
-
-#### Description
-
-Create a function named `fibonacci` that returns the first `n` numbers in the Fibonacci sequence.
-
-#### Example
-
-Input:
-
-* `5`
-
-Output:
-
-* `0, 1, 1, 2, 3`
+#### 4. Status Check (`check_status`)
+* **Return Value**: A dictionary containing the following keys:
+    * `service_name`: The name of the service.
+    * `environment`: The deployment environment (e.g., prod, staging).
+    * `status`: The current state (`pending`, `deployed`, or `rolled_back`).
+    * `version`: The currently active version string (or `None`).
 
 ---
-
