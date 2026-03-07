@@ -179,3 +179,51 @@ Design a `Deployment` class that models a software deployment lifecycle. This cl
     * `version`: The currently active version string (or `None`).
 
 ---
+# Exercise 5: Flexible Resource Tagger
+
+As a cloud engineer, maintaining consistent metadata across infrastructure is critical for cost allocation, security, and automation. This exercise focuses on creating a robust Python utility to manage resource tags dynamically.
+
+---
+
+## Problem Description
+
+Your task is to implement the `manage_tags` function in `exercise.py`. This function must process an existing dictionary of tags and apply updates based on a flexible set of additional arguments, following strict precedence and immutability rules.
+
+
+
+## Behavioral Requirements
+
+The function signature is:  
+`def manage_tags(existing_tags, *simple_tags, **key_value_tags):`
+
+### 1. Initial Tags (`existing_tags`)
+The first argument is a dictionary representing the resource's current tags.
+
+### 2. Simple Tags (`*simple_tags`)
+* The function accepts any number of positional string arguments.
+* Each simple tag must be added to the dictionary as a key with the string value `'true'`.
+* If a simple tag is provided multiple times (e.g., `'billable'`, `'billable'`), it should only be added once.
+
+### 3. Key-Value Tags (`**key_value_tags`)
+* The function accepts any number of keyword arguments.
+* These pairs should be added to the result dictionary.
+* **Precedence:** If a key from a keyword argument already exists (either in the initial tags or the simple tags), its value **must** be overwritten by the keyword argument value.
+
+### 4. Immutability
+* The function **must not modify** the original `existing_tags` dictionary.
+* It must return a **new dictionary** containing the merged result.
+
+---
+
+## Example Usage
+
+```python
+initial = {'owner': 'dev-team', 'env': 'dev'}
+
+final_tags = manage_tags(
+    initial,
+    'billable',              # A simple tag
+    'critical',              # Another simple tag
+    env='staging',           # Overwrites 'env' from initial
+    cost_center='xyz-123'    # A new key-value tag
+)
