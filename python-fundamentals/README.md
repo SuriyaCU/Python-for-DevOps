@@ -229,6 +229,7 @@ final_tags = manage_tags(
 )
 
 ---
+
 ## Exercise 6: Log File Line Generator
 
 ### The Task
