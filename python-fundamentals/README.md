@@ -229,10 +229,9 @@ final_tags = manage_tags(
     cost_center='xyz-123'    # A new key-value tag
 )
 
-
-
 ---
-## Exercise 6: Log File Line Generator
+
+# Exercise 6: Log File Line Generator
 
 ### The Task
 You are a DevOps engineer tasked with creating a memory-efficient tool for parsing large log files. A full-featured log parsing library might be too heavy, and loading a multi-gigabyte file into memory would be inefficient.
