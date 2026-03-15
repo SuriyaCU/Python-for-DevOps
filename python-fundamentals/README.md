@@ -229,8 +229,9 @@ final_tags = manage_tags(
     cost_center='xyz-123'    # A new key-value tag
 )
 
----
 
+
+---
 ## Exercise 6: Log File Line Generator
 
 ### The Task
