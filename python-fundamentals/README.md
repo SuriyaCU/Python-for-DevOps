@@ -82,7 +82,7 @@ Given the following variables:
 
 ---
 
-## Configuration Validation Exercise
+## Exercise 1: Configuration Validation
 
 ### Objective
 
