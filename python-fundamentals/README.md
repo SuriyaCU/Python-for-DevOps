@@ -142,6 +142,15 @@ Output:
 * Hello, Bob!
 * Hello, Charlie!
 
+### 2.Sum of Even Numbers
+
+#### Description
+
+Define a function sum_even(numbers) that takes a list of integers and returns the sum of all even numbers.
+
+Test with [1, 2, 3, 4, 5, 6] (should return 12).
+
+
 ---
 ## Exercise 4: Object-Oriented Deployment Manager
 
