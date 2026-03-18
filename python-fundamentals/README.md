@@ -142,7 +142,7 @@ Output:
 * Hello, Bob!
 * Hello, Charlie!
 
-### 2.Sum of Even Numbers
+### 2. Sum of Even Numbers
 
 #### Description
 
@@ -150,7 +150,7 @@ Define a function sum_even(numbers) that takes a list of integers and returns th
 
 Test with [1, 2, 3, 4, 5, 6] (should return 12).
 
-### 3.Fibonacci Sequence Generator
+### 3. Fibonacci Sequence Generator
 
 #### Description
 Define a function fibonacci(n) that returns a list of the first n Fibonacci numbers.
