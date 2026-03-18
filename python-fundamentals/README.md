@@ -150,6 +150,12 @@ Define a function sum_even(numbers) that takes a list of integers and returns th
 
 Test with [1, 2, 3, 4, 5, 6] (should return 12).
 
+### 3.Fibonacci Sequence Generator
+
+#### Description
+Define a function fibonacci(n) that returns a list of the first n Fibonacci numbers.
+
+Example: fibonacci(5) should return [0, 1, 1, 2, 3].
 
 ---
 ## Exercise 4: Object-Oriented Deployment Manager
