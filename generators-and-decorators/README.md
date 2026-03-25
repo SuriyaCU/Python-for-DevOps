@@ -30,6 +30,7 @@ Given a file named **`sample.log`** with the following content:
 # Configuration section
   # A nested comment
 [WARN] Deprecated feature used.
+```
 
 ---
 
