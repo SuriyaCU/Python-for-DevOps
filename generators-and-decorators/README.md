@@ -30,3 +30,80 @@ Given a file named **`sample.log`** with the following content:
 # Configuration section
   # A nested comment
 [WARN] Deprecated feature used.
+
+---
+
+## Exercise 7: Configuration File Processing Pipeline
+
+### Problem Statement
+
+You are a DevOps engineer responsible for building a tool that processes large configuration files efficiently using **generators**.
+
+
+### Configuration File Format
+
+* Sections are defined using square brackets like: [database]
+* Key-value pairs are defined as: key = value
+* Comments start with #
+* Empty lines should be ignored
+
+
+### Objective
+
+Build a pipeline of three generator functions to process configuration files lazily.
+
+
+### Functions to Implement
+
+#### 1. read_config_file(filepath)
+* Accepts a file path
+* Opens the file
+* Yields each line one by one
+
+
+#### 2. filter_config_lines(lines)
+* Accepts an iterable of lines
+* Strips whitespace
+* Ignores:
+  * Empty lines
+  * Lines starting with #
+* Yields only valid lines
+
+
+
+#### 3. parse_config_lines(lines)
+* Accepts cleaned lines
+* Tracks current section (None initially)
+
+Behavior:
+* If line is a section like [section]:
+  * Update current section
+  * Do not yield anything
+* If line is a key-value pair:
+  * Split using split('=', 1)
+  * Yield (current_section, key, value)
+
+
+### Example
+
+Input (app.cfg)
+
+    # Global settings
+    timeout = 30
+
+    [database]
+    host = db.prod.local
+    port = 5432
+
+    [api_service]
+    url = https://api.service.com/v1?retries=3
+
+
+Expected Output
+
+    (None, 'timeout', '30')
+    ('database', 'host', 'db.prod.local')
+    ('database', 'port', '5432')
+    ('api_service', 'url', 'https://api.service.com/v1?retries=3')
+
+---
