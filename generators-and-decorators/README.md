@@ -157,6 +157,79 @@ if __name__ == "__main__":
 
 ---
 
+## Exercise 9: Role-Based Access Control (RBAC) Decorator Factory
+
+### 🚀 Context
+As a DevOps engineer, you are often tasked with building internal tools that perform sensitive operations (e.g., restarting production servers, clearing databases, or modifying cloud permissions). Security is paramount, and manually adding permission checks to every function is error-prone and repetitive.
+
+In this exercise, we implement a **Decorator Factory**. This allows us to create a configurable decorator that can be used across multiple functions to enforce specific role requirements.
+
+### 📝 Objective
+Create a decorator factory named `require_role`. This factory accepts a `required_role` string and generates a decorator that verifies if a user has the necessary permissions before allowing a function to execute.
+
+### Functional Requirements
+* **The Factory:** `require_role(required_role)` must return a decorator function.
+* **The Wrapper:** * Must accept arbitrary positional (`*args`) and keyword (`**kwargs`) arguments.
+    * Must extract the `user` dictionary from the keyword arguments.
+* **Logic:**
+    * Check if `required_role` exists within the user's `roles` list.
+    * If the role is missing, raise a `PermissionError`.
+    * If the role exists, execute the function and return its value.
+* **Metadata:** Use `functools.wraps` to ensure the original function’s name and docstring are preserved.
+
+---
+
+### 🛠️ Implementation
+
+```python
+import functools
+
+def require_role(required_role):
+    """
+    A decorator factory that creates a decorator to check for a specific user role.
+
+    Args:
+        required_role (str): The role string that the user must have.
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # 1. Retrieve the user dictionary from kwargs
+            user = kwargs.get('user')
+            
+            # 2. Check if the user has the required role
+            # (Assuming user['roles'] is always a list per requirements)
+            if required_role not in user.get('roles', []):
+                raise PermissionError(
+                    f"Access Denied: User '{user.get('name')}' lacks the '{required_role}' role."
+                )
+            
+            # 3. If check passes, execute and return the original function
+            return func(*args, **kwargs)
+            
+        return wrapper
+    return decorator
+```
+
+## --- Example Usage ---
+
+@require_role('admin')
+def restart_server(*, user, server_id):
+    """Restarts a server after a permission check."""
+    return f"Server {server_id} restart initiated by {user['name']}."
+
+if __name__ == "__main__":
+    admin_user = {'name': 'alice', 'roles': ['admin', 'viewer']}
+    viewer_user = {'name': 'bob', 'roles': ['viewer']}
+
+    # Successful call
+    print(restart_server(user=admin_user, server_id='web-01'))
+
+    # This would raise PermissionError
+    # print(restart_server(user=viewer_user, server_id='db-01'))
+
+---
+
 
 Expected Output
 
