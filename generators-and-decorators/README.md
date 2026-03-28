@@ -99,6 +99,64 @@ Input (app.cfg)
     [api_service]
     url = https://api.service.com/v1?retries=3
 
+---
+## Exercise 8: Argument Sanitizer Decorator
+
+### 🚀 Context
+In DevOps automation, data consistency is critical. When interacting with cloud infrastructure, APIs, or SSH clients, hostnames must often follow a strict format. Instead of manually cleaning strings inside every function, this exercise demonstrates how to use **Python Decorators** to centralize sanitization logic.
+
+### 📝 Objective
+Create a decorator named `sanitize_hostname` that automatically intercepts the `hostname` keyword argument, converts it to lowercase, and strips any leading or trailing whitespace before the decorated function executes.
+
+### Functional Requirements
+* **Universal Compatibility:** The wrapper must accept arbitrary positional (`*args`) and keyword (`**kwargs`) arguments.
+* **Targeting:** Specifically look for the `hostname` key within the `kwargs` dictionary.
+* **Sanitization:** Convert the value to lowercase and remove surrounding whitespace.
+* **Execution:** Call the original function with the sanitized arguments and return its original return value.
+* **Metadata:** Use `functools.wraps` to preserve the original function’s metadata (like `__name__` and `__doc__`).
+
+---
+
+### 🛠️ Implementation
+
+```python
+import functools
+
+def sanitize_hostname(func):
+    """
+    A decorator that finds a 'hostname' keyword argument, sanitizes it
+    (lowercase, stripped whitespace), and passes it to the wrapped function.
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # 1. Look for the 'hostname' key in the keyword arguments
+        hostname = kwargs.get('hostname')
+        
+        if hostname:
+            # 2. Apply sanitization: remove whitespace and lowercase
+            kwargs['hostname'] = hostname.strip().lower()
+        
+        # 3. Execute the original function with the updated kwargs
+        return func(*args, **kwargs)
+        
+    return wrapper
+```
+
+## --- Example Usage ---
+
+@sanitize_hostname
+def connect_to_host(*, hostname):
+    """Establishes a connection to a host."""
+    print(f"Connecting to sanitized hostname: '{hostname}'")
+    return f"Connected to {hostname}"
+
+if __name__ == "__main__":
+    # Test: The decorator will sanitize '  PROD-API.local  ' to 'prod-api.local'
+    result = connect_to_host(hostname="  PROD-API.local  ")
+    print(f"Function Result: {result}")
+
+---
+
 
 Expected Output
 
