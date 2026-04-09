@@ -142,4 +142,59 @@ except TypeError as e:
     print(f"Caught expected error: {e}")
 
 ---
+## Exercise 12: Robust RBAC Decorator with Custom Exceptions
 
+### Scenario
+This exercise builds on the Role-Based Access Control (RBAC) decorator. In a production system, you cannot assume that inputs (like user objects) will always be well-formed. To make the system reliable, your decorator must validate its inputs and provide clear, domain-specific errors using custom exceptions.
+
+### Objective
+Enhance the `require_role` decorator factory by adding strict input validation and a custom exception class named `AuthorizationError`.
+
+### Functional Requirements
+
+#### 1. Define a Custom Exception
+Create a class named `AuthorizationError` that inherits from `Exception`.
+* **Initialization:** The `__init__` method must accept `user_name` and `required_role`.
+* **Attributes:** Store these values as attributes on the instance.
+* **Message:** Generate a clear error message, e.g., `"User 'alice' lacks the required role: 'admin'."`
+
+#### 2. Enhance the Decorator Factory
+Modify the `require_role` decorator's internal wrapper to perform validation **before** checking permissions:
+
+* **Validation Step 1 (Missing Argument):** If the `user` keyword argument is missing from the function call, raise a `ValueError`.
+* **Validation Step 2 (Type Check):** If the `user` argument is provided but is not a `dict`, raise a `TypeError`.
+* **Validation Step 3 (Malformed Dictionary):** If the `user` dictionary is missing the `roles` key, or if `user['roles']` is not a `list`, raise a `ValueError`.
+* **Permission Check:** If all validations pass but the user lacks the required role, raise the custom `AuthorizationError` (instead of a generic `PermissionError`).
+
+---
+
+### Example Usage
+
+```python
+# Custom exception for clarity
+class AuthorizationError(Exception):
+    # ... implementation ...
+    pass
+
+@require_role('admin')
+def restart_server(*, user, server_id):
+    """Restarts a server after a permission check."""
+    return f"Server {server_id} restart initiated."
+
+admin_user = {'name': 'alice', 'roles': ['admin']}
+viewer_user = {'name': 'bob', 'roles': ['viewer']}
+malformed_user = {'name': 'eve'} # Missing 'roles' key
+
+# Succeeds:
+restart_server(user=admin_user, server_id='web-01')
+
+# Raises AuthorizationError:
+# restart_server(user=viewer_user, server_id='db-01')
+
+# Raises ValueError (Malformed input):
+# restart_server(user=malformed_user, server_id='app-01')
+
+# Raises ValueError (Missing keyword argument):
+# restart_server(server_id='app-01')
+
+---
