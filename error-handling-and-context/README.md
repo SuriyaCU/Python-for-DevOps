@@ -196,6 +196,7 @@ restart_server(user=admin_user, server_id='web-01')
 
 # Raises ValueError (Missing keyword argument):
 # restart_server(server_id='app-01')
+```
 
 ---
 ## Exercise 13: Advanced Retry Decorator with Exponential Backoff and Jitter
