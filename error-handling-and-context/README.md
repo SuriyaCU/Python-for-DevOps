@@ -198,3 +198,61 @@ restart_server(user=admin_user, server_id='web-01')
 # restart_server(server_id='app-01')
 
 ---
+## Exercise 13: Advanced Retry Decorator with Exponential Backoff and Jitter
+
+### Scenario
+You are a **DevOps Engineer** writing scripts that interact with a critical but occasionally flaky API. When the API has a momentary outage, all client scripts often retry at the exact same time, causing a "thundering herd" effect that overloads the API as soon as it comes back online. To solve this, you need a decorator that spaces out retries intelligently.
+
+### Objective
+Implement a robust, production-ready retry decorator factory named `retry_with_backoff`. This decorator must use **exponential backoff** and **random jitter** to spread out retry attempts and provide clear, contextual errors upon final failure.
+
+### Functional Requirements
+
+### 1. Decorator Factory Arguments
+The factory must accept three arguments:
+* `max_attempts` (int): Total number of times to try the function.
+* `base_delay` (float/int): The starting delay duration.
+* `jitter` (float/int): The maximum random noise to add to the delay.
+
+### 2. Retry Logic
+* **Success:** If the wrapped function succeeds, return its value immediately.
+* **Exponential Backoff:** If the function raises an `Exception`, the delay before the next retry should follow the formula:  
+    `delay = base_delay * (2 ** (failure_count - 1))`
+* **Random Jitter:** To prevent synchronized retries, add a random value between `0` and `jitter` (using `random.uniform(0, jitter)`) to each calculated delay.
+* **Metadata:** The decorator must preserve the original function's metadata (e.g., `__name__`, `__doc__`).
+
+### 3. Custom Exception: `MaxRetriesExceededError`
+Define a custom exception class that inherits from `Exception`:
+* **Initialization:** The `__init__` method must accept `attempts` (total attempts made) and `last_exception` (the final error caught).
+* **Attributes:** Store these values as attributes on the instance.
+* **Final Failure:** If the function fails all `max_attempts`, raise `MaxRetriesExceededError` **from** the last exception caught (using `raise ... from ...`) to preserve exception chaining.
+
+### 4. Input Validation
+The `retry_with_backoff` factory must validate its own arguments when it is first called:
+* `max_attempts` must be an integer greater than 0.
+* `base_delay` and `jitter` must be non-negative numbers (0 or greater).
+* Raise a `ValueError` if any validation fails.
+
+---
+
+### Example Usage
+
+```python
+class MaxRetriesExceededError(Exception):
+    # ... implementation ...
+    pass
+
+@retry_with_backoff(max_attempts=3, base_delay=0.1, jitter=0.05)
+def connect_to_api():
+    """Simulates a network call that might fail."""
+    print("Attempting to connect...")
+    raise ConnectionError("API Offline")
+
+try:
+    connect_to_api()
+except MaxRetriesExceededError as e:
+    print(f"Failed after {e.attempts} attempts.")
+    print(f"The underlying cause was: {e.last_exception}")
+```
+---
+
