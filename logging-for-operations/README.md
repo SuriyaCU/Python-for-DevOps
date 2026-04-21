@@ -87,4 +87,45 @@ for i in range(200):
     service_logger.info(f"Checking status of component {i}.")
 ```
 ---
+# Exercise 16: Dynamic Logging Configuration with Verbose Mode
+
+## Scenario
+You are building a command-line tool for your team. To help with troubleshooting, you want to add a `--verbose` flag that increases the tool's log output. When the flag is present, the tool should log detailed `DEBUG` messages; otherwise, it should only show `INFO` level messages and higher.
+
+## Objective
+Your task is to implement a function, `configure_logging`, that sets up the application's logging based on a boolean flag. This function will define a base configuration as a dictionary and modify it dynamically before applying it to the system.
+
+## Functional Requirements
+The function must accept one argument:
+* **verbose** (bool): A flag indicating whether to enable detailed logging.
+
+### Logic Requirements
+1.  **Base Configuration:** Inside the function, define a logging configuration dictionary. This dictionary should configure the **root logger** to use:
+    * A `StreamHandler` (to output to the console).
+    * A simple `Formatter` with the format: `%(levelname)s: %(message)s`.
+    * A default log level of `INFO`.
+2.  **Dynamic Modification:** * If the `verbose` argument is `True`, the function must programmatically modify the configuration dictionary to change the root logger's level to `DEBUG`.
+    * If `verbose` is `False`, the configuration should remain at the default `INFO` level.
+3.  **Application:** Apply the configuration using `logging.config.dictConfig()`.
+4.  **Return Value:** The function must **return** the root logger instance.
+
+### Input Validation
+* If the `verbose` argument is not a boolean (`True` or `False`), the function must raise a `TypeError`.
+
+---
+
+## Example Usage
+
+```python
+# Scenario 1: Standard output
+root_logger = configure_logging(verbose=False)
+root_logger.debug("This will NOT be shown.")
+root_logger.info("This WILL be shown.")
+
+# Scenario 2: Verbose output
+root_logger_v = configure_logging(verbose=True)
+root_logger_v.debug("This WILL be shown now!")
+
+---
+
 
